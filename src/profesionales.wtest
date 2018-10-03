@@ -1,0 +1,30 @@
+import profesionales.*
+import empresas.*
+
+describe "test de universidades, profesionales y empresas" {
+	
+	//universidades
+	var sanMartin = new Universidad(provincia = #{"Buenos Aires"}, honorariosPorHora = 3500)
+	var rosario = new Universidad(provincia = #{"Santa Fe"}, honorariosPorHora = 2800)
+    var corrientes = new Universidad(provincia = #{"Corrientes"}, honorariosPorHora = 4200)
+	var hurlingham = new Universidad(provincia = #{"Buenos Aires"}, honorariosPorHora = 8800)
+	
+	//profesionales
+	var juana = new ProfesionalVinculado(universidad = rosario)
+	var melina = new ProfesionalAsociado(universidad = corrientes)
+	var rocio = new ProfesionalLibre(universidad = hurlingham, provinciasDondePuedeTrabajar = #{"Santa Fe", "Cordoba", "Buenos Aires"}, honorariosPorHora = 5500)
+    var luciana = new ProfesionalLibre(universidad = rosario, provinciasDondePuedeTrabajar = #{"Santa Fe", "Entre Rios"}, honorariosPorHora = 3200)
+	
+	
+	//empresa
+	var alchemax = new Empresa(honorarioDeReferencia = 3500, profesionales = #{juana, melina, rocio, luciana})	
+	
+	test "test de empresa alchemax" {
+		assert.equals(alchemax.profesionalesCaros(), #{rocio})
+		assert.equals(alchemax.universidadesFormadoras(), #{rosario,corrientes, hurlingham})
+		assert.equals(alchemax.profesionalMasBarato(), juana)
+		assert.that(alchemax.hayProfesionalEn("Santa Fe"))
+		assert.that(alchemax.hayProfesionalEn("Cordoba"))
+		assert.notThat(alchemax.hayProfesionalEn("Misiones"))
+	}
+}
